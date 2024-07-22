@@ -9,7 +9,8 @@ Route::get('/home', function () {
     return redirect()->route('admin.home');
 });
 
-Auth::routes(['register' => false]);
+Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
+Auth::routes();
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index')->name('home');
@@ -25,19 +26,31 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
     Route::resource('users', 'UsersController');
 
-    // Container Movement Service
-    Route::delete('container-movement-services/destroy', 'ContainerMovementServiceController@massDestroy')->name('container-movement-services.massDestroy');
-    Route::resource('container-movement-services', 'ContainerMovementServiceController');
+    // Applicant In Formation
+    Route::delete('applicant-in-formations/destroy', 'ApplicantInFormationController@massDestroy')->name('applicant-in-formations.massDestroy');
+    Route::resource('applicant-in-formations', 'ApplicantInFormationController');
 
-    Route::get('messenger', 'MessengerController@index')->name('messenger.index');
-    Route::get('messenger/create', 'MessengerController@createTopic')->name('messenger.createTopic');
-    Route::post('messenger', 'MessengerController@storeTopic')->name('messenger.storeTopic');
-    Route::get('messenger/inbox', 'MessengerController@showInbox')->name('messenger.showInbox');
-    Route::get('messenger/outbox', 'MessengerController@showOutbox')->name('messenger.showOutbox');
-    Route::get('messenger/{topic}', 'MessengerController@showMessages')->name('messenger.showMessages');
-    Route::delete('messenger/{topic}', 'MessengerController@destroyTopic')->name('messenger.destroyTopic');
-    Route::post('messenger/{topic}/reply', 'MessengerController@replyToTopic')->name('messenger.reply');
-    Route::get('messenger/{topic}/reply', 'MessengerController@showReply')->name('messenger.showReply');
+    // Company Details
+    Route::delete('company-details/destroy', 'CompanyDetailsController@massDestroy')->name('company-details.massDestroy');
+    Route::post('company-details/media', 'CompanyDetailsController@storeMedia')->name('company-details.storeMedia');
+    Route::post('company-details/ckmedia', 'CompanyDetailsController@storeCKEditorImages')->name('company-details.storeCKEditorImages');
+    Route::resource('company-details', 'CompanyDetailsController');
+
+    // Export Details
+    Route::delete('export-details/destroy', 'ExportDetailsController@massDestroy')->name('export-details.massDestroy');
+    Route::post('export-details/media', 'ExportDetailsController@storeMedia')->name('export-details.storeMedia');
+    Route::post('export-details/ckmedia', 'ExportDetailsController@storeCKEditorImages')->name('export-details.storeCKEditorImages');
+    Route::resource('export-details', 'ExportDetailsController');
+
+    // Compliance Information
+    Route::delete('compliance-informations/destroy', 'ComplianceInformationController@massDestroy')->name('compliance-informations.massDestroy');
+    Route::resource('compliance-informations', 'ComplianceInformationController');
+
+    // Submission Checklist
+    Route::delete('submission-checklists/destroy', 'SubmissionChecklistController@massDestroy')->name('submission-checklists.massDestroy');
+    Route::post('submission-checklists/media', 'SubmissionChecklistController@storeMedia')->name('submission-checklists.storeMedia');
+    Route::post('submission-checklists/ckmedia', 'SubmissionChecklistController@storeCKEditorImages')->name('submission-checklists.storeCKEditorImages');
+    Route::resource('submission-checklists', 'SubmissionChecklistController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
