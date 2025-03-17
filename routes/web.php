@@ -1,17 +1,9 @@
 <?php
 
-Route::redirect('/', '/login');
-Route::get('/home', function () {
-    if (session('status')) {
-        return redirect()->route('admin.home')->with('status', session('status'));
-    }
-
-    return redirect()->route('admin.home');
-});
-
+Route::view('/', 'welcome');
 Auth::routes(['register' => false]);
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', 'HomeController@index')->name('home');
     // Permissions
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
@@ -25,19 +17,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
     Route::resource('users', 'UsersController');
 
-    // Container Movement Service
-    Route::delete('container-movement-services/destroy', 'ContainerMovementServiceController@massDestroy')->name('container-movement-services.massDestroy');
-    Route::resource('container-movement-services', 'ContainerMovementServiceController');
-
-    Route::get('messenger', 'MessengerController@index')->name('messenger.index');
-    Route::get('messenger/create', 'MessengerController@createTopic')->name('messenger.createTopic');
-    Route::post('messenger', 'MessengerController@storeTopic')->name('messenger.storeTopic');
-    Route::get('messenger/inbox', 'MessengerController@showInbox')->name('messenger.showInbox');
-    Route::get('messenger/outbox', 'MessengerController@showOutbox')->name('messenger.showOutbox');
-    Route::get('messenger/{topic}', 'MessengerController@showMessages')->name('messenger.showMessages');
-    Route::delete('messenger/{topic}', 'MessengerController@destroyTopic')->name('messenger.destroyTopic');
-    Route::post('messenger/{topic}/reply', 'MessengerController@replyToTopic')->name('messenger.reply');
-    Route::get('messenger/{topic}/reply', 'MessengerController@showReply')->name('messenger.showReply');
+    // Staff Travel Form
+    Route::delete('staff-travel-forms/destroy', 'StaffTravelFormController@massDestroy')->name('staff-travel-forms.massDestroy');
+    Route::resource('staff-travel-forms', 'StaffTravelFormController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
@@ -47,4 +29,28 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('profile', 'ChangePasswordController@updateProfile')->name('password.updateProfile');
         Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
     }
+});
+Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['auth']], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+
+    // Permissions
+    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
+    Route::resource('permissions', 'PermissionsController');
+
+    // Roles
+    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
+    Route::resource('roles', 'RolesController');
+
+    // Users
+    Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
+    Route::resource('users', 'UsersController');
+
+    // Staff Travel Form
+    Route::delete('staff-travel-forms/destroy', 'StaffTravelFormController@massDestroy')->name('staff-travel-forms.massDestroy');
+    Route::resource('staff-travel-forms', 'StaffTravelFormController');
+
+    Route::get('frontend/profile', 'ProfileController@index')->name('profile.index');
+    Route::post('frontend/profile', 'ProfileController@update')->name('profile.update');
+    Route::post('frontend/profile/destroy', 'ProfileController@destroy')->name('profile.destroy');
+    Route::post('frontend/profile/password', 'ProfileController@password')->name('profile.password');
 });
