@@ -76,23 +76,23 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 17,
-                'title' => 'container_movement_service_create',
+                'title' => 'staff_travel_form_create',
             ],
             [
                 'id'    => 18,
-                'title' => 'container_movement_service_edit',
+                'title' => 'staff_travel_form_edit',
             ],
             [
                 'id'    => 19,
-                'title' => 'container_movement_service_show',
+                'title' => 'staff_travel_form_show',
             ],
             [
                 'id'    => 20,
-                'title' => 'container_movement_service_delete',
+                'title' => 'staff_travel_form_delete',
             ],
             [
                 'id'    => 21,
-                'title' => 'container_movement_service_access',
+                'title' => 'staff_travel_form_access',
             ],
             [
                 'id'    => 22,
